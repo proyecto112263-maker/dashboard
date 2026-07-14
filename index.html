@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PROYECTO HUGO</title>
+
+<title>Proyecto Hugo</title>
 
 <style>
 
@@ -11,12 +13,12 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:'Segoe UI',Arial,sans-serif;
+font-family:Segoe UI,Arial,sans-serif;
 }
 
 body{
 
-background:#eef3f8;
+background:#edf2f7;
 
 padding:15px;
 
@@ -38,7 +40,7 @@ text-align:center;
 
 margin-bottom:20px;
 
-font-size:32px;
+font-size:30px;
 
 color:#1d3557;
 
@@ -64,7 +66,7 @@ background:white;
 
 padding:18px;
 
-border-radius:16px;
+border-radius:18px;
 
 box-shadow:0 5px 15px rgba(0,0,0,.08);
 
@@ -78,7 +80,7 @@ font-size:14px;
 
 margin-bottom:8px;
 
-color:#6c7b8a;
+color:#7b8794;
 
 }
 
@@ -92,43 +94,23 @@ color:#1565c0;
 
 }
 
-table{
+#tabla{
 
-width:100%;
+display:flex;
 
-border-collapse:separate;
+flex-direction:column;
 
-border-spacing:0 14px;
-
-}
-
-th{
-
-text-align:left;
-
-padding:12px;
-
-font-size:14px;
-
-color:#607080;
-
-}
-
-td{
-
-vertical-align:top;
+gap:18px;
 
 }
 
 .operacion{
 
-background:white;
-
 border-radius:18px;
 
-box-shadow:0 6px 18px rgba(0,0,0,.08);
+padding:18px;
 
-overflow:hidden;
+box-shadow:0 6px 15px rgba(0,0,0,.08);
 
 transition:.25s;
 
@@ -138,97 +120,145 @@ transition:.25s;
 
 transform:translateY(-2px);
 
-box-shadow:0 10px 20px rgba(0,0,0,.12);
-
-}
-
-.ganancia{
-
-background:#edf9f0;
-
-border-left:8px solid #61b883;
-
-}
-
-.perdida{
-
-background:#fdeeee;
-
-border-left:8px solid #df6b6b;
-
-}
-
-.fecha{
-
-width:120px;
-
-padding:18px;
-
-font-weight:bold;
-
-font-size:16px;
-
-color:#234;
-
-}
-
-.moneda{
-
-width:180px;
-
-padding:18px;
-
-}
-
-.moneda strong{
-
-font-size:18px;
-
-display:block;
-
-margin-bottom:5px;
-
-}
-
-.resultado{
-
-padding:18px;
-
-line-height:1.8;
-
-font-size:14px;
-
-}
-
-.label{
-
-font-weight:bold;
-
-color:#506070;
-
 }
 
 .positivo{
 
-color:#239b56;
+background:#eef8f1;
 
-font-weight:bold;
+border-left:8px solid #63b67b;
 
 }
 
 .negativo{
 
-color:#c0392b;
+background:#fdeeee;
 
-font-weight:bold;
+border-left:8px solid #d86c6c;
 
 }
 
-.acumulado{
+.fecha{
 
-color:#1565c0;
+font-size:15px;
 
 font-weight:bold;
+
+margin-bottom:18px;
+
+color:#2d4b6d;
+
+}
+
+.fila{
+
+display:grid;
+
+grid-template-columns:45% 55%;
+
+gap:15px;
+
+}
+
+.izquierda{
+
+display:flex;
+
+flex-direction:column;
+
+gap:18px;
+
+}
+
+.bloque{
+
+display:flex;
+
+flex-direction:column;
+
+}
+
+.titulo{
+
+font-size:11px;
+
+font-weight:bold;
+
+letter-spacing:1px;
+
+color:#7d8b99;
+
+margin-bottom:5px;
+
+text-transform:uppercase;
+
+}
+
+.valor{
+
+font-size:18px;
+
+font-weight:bold;
+
+color:#23364a;
+
+}
+
+.derecha{
+
+display:flex;
+
+flex-direction:column;
+
+gap:10px;
+
+justify-content:center;
+
+}
+
+.item{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:7px 0;
+
+border-bottom:1px solid rgba(0,0,0,.05);
+
+}
+
+.item span:first-child{
+
+font-size:13px;
+
+color:#6f7c89;
+
+font-weight:600;
+
+}
+
+.item span:last-child{
+
+font-size:15px;
+
+font-weight:bold;
+
+color:#243447;
+
+}
+
+.gananciaPositiva{
+
+color:#239b56 !important;
+
+}
+
+.gananciaNegativa{
+
+color:#c0392b !important;
 
 }
 
@@ -238,15 +268,15 @@ margin-top:25px;
 
 text-align:center;
 
-color:#789;
-
 font-size:13px;
 
 letter-spacing:3px;
 
+color:#7f8c99;
+
 }
 
-@media(max-width:768px){
+@media(max-width:700px){
 
 body{
 
@@ -256,7 +286,7 @@ padding:8px;
 
 h1{
 
-font-size:24px;
+font-size:22px;
 
 }
 
@@ -272,49 +302,29 @@ font-size:22px;
 
 }
 
-th{
+.fila{
 
-display:none;
+grid-template-columns:1fr 1fr;
 
-}
-
-table{
-
-border-spacing:0 10px;
+gap:10px;
 
 }
 
-.fecha{
-
-width:85px;
-
-padding:12px;
-
-font-size:13px;
-
-}
-
-.moneda{
-
-width:110px;
-
-padding:12px;
-
-}
-
-.moneda strong{
+.valor{
 
 font-size:15px;
 
 }
 
-.resultado{
+.item span:first-child{
 
-padding:12px;
+font-size:11px;
+
+}
+
+.item span:last-child{
 
 font-size:12px;
-
-line-height:1.6;
 
 }
 
@@ -333,46 +343,30 @@ line-height:1.6;
 <div class="resumen">
 
 <div class="card">
+
 <h2>CAPITAL INICIAL</h2>
+
 <p id="capitalInicial">-</p>
+
 </div>
 
 <div class="card">
+
 <h2>CAPITAL FINAL</h2>
+
 <p id="capitalFinal">-</p>
-</div>
 
 </div>
 
-<table>
+</div>
 
-<thead>
-
-<tr>
-
-<th style="width:120px;">FECHA</th>
-
-<th style="width:180px;">OPERACIÓN</th>
-
-<th>RESULTADO</th>
-
-</tr>
-
-</thead>
-
-<tbody id="tabla">
-
-</tbody>
-
-</table>
+<div id="tabla"></div>
 
 <footer>
 
 PROYECTO HUGO
 
 </footer>
-
-</div>
 
 <script>
   const URL="https://script.google.com/macros/s/AKfycbxcdEgTZeVoH5ESUIdFaTOfOVWuqXMSypVGZONOKG7kkOdpVz3z71cu1KtzrKyUa8PKTw/exec?api=1";
@@ -384,78 +378,120 @@ const r=await fetch(URL);
 const datos=await r.json();
 
 document.getElementById("capitalInicial").innerText=datos[1][1];
-
 document.getElementById("capitalFinal").innerText=datos[2][1];
 
 let html="";
 
 for(let i=datos.length-1;i>=6;i--){
 
-let ganancia=parseFloat(String(datos[i][7]).replace(",","."))||0;
+let fecha=datos[i][0];
+let moneda=datos[i][1];
+let cantidad=datos[i][2];
+let compra=datos[i][3];
+let venta=datos[i][4];
+let spread=datos[i][5];
+let ganancia=datos[i][7];
 
-let clase=ganancia>=0?"ganancia":"perdida";
+let numero=parseFloat(
+String(ganancia)
+.replace("%","")
+.replace(",",".")
+);
 
-let color=ganancia>=0?"positivo":"negativo";
+let clase=numero>=0?"positivo":"negativo";
+let color=numero>=0?"gananciaPositiva":"gananciaNegativa";
 
 html+=`
 
-<tr>
-
-<td colspan="3">
-
 <div class="operacion ${clase}">
 
-<table style="width:100%;border-collapse:collapse;">
+<div class="fecha">
 
-<tr>
-
-<td class="fecha">
-
-${datos[i][0]}
-
-</td>
-
-<td class="moneda">
-
-<strong>${datos[i][1]}</strong>
-
-${datos[i][2]} USD
-
-</td>
-
-<td class="resultado">
-
-<div><span class="label">Precio Compra:</span> ${datos[i][3]}</div>
-
-<div><span class="label">Precio Venta:</span> ${datos[i][4]}</div>
-
-<div><span class="label">Porcentaje Ganancia:</span> ${datos[i][5]}</div>
-
-<div><span class="label">Porcentaje de Ganancia X:</span> ${datos[i][6]}</div>
-
-<div><span class="label">Ganancia Dólares:</span>
-
-<span class="${color}">${datos[i][7]}</span>
+📅 ${fecha}
 
 </div>
 
-<div><span class="label">Ganancia Acumulada Dólares:</span>
+<div class="fila">
 
-<span class="acumulado">${datos[i][8]}</span>
+<div class="izquierda">
 
-</div>
+<div class="bloque">
 
-</td>
+<div class="titulo">
 
-</tr>
-
-</table>
+MONEDA
 
 </div>
 
-</td>
+<div class="valor">
 
-</tr>
+${moneda}
+
+</div>
+
+</div>
+
+<div class="bloque">
+
+<div class="titulo">
+
+CANTIDAD USADA
+
+</div>
+
+<div class="valor">
+
+${cantidad} USD
+
+</div>
+
+</div>
+
+</div>
+
+<div class="derecha">
+
+<div class="item">
+
+<span>Precio Compra</span>
+
+<span>${compra}</span>
+
+</div>
+
+<div class="item">
+
+<span>Precio Venta</span>
+
+<span>${venta}</span>
+
+</div>
+
+<div class="item">
+
+<span>Spread</span>
+
+<span>${spread}</span>
+
+</div>
+
+<div class="item">
+
+<span>Ganancia</span>
+
+<span class="${color}">
+
+${ganancia} USD
+
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 `;
 
