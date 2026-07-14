@@ -2,9 +2,8 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Dashboard de Transacciones</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Proyecto Hugo</title>
 
 <style>
 
@@ -17,29 +16,19 @@ font-family:Segoe UI,Arial,sans-serif;
 
 body{
 
-background:linear-gradient(180deg,#07111f,#0c2345,#1d5fbf);
+background:#081523;
 
-color:white;
+color:#fff;
 
-padding:10px;
+padding:15px;
 
 }
 
-.panel{
+.container{
 
 max-width:1400px;
 
 margin:auto;
-
-background:rgba(255,255,255,.08);
-
-backdrop-filter:blur(15px);
-
-border-radius:18px;
-
-padding:15px;
-
-box-shadow:0 0 25px rgba(0,0,0,.45);
 
 }
 
@@ -47,21 +36,21 @@ h1{
 
 text-align:center;
 
-font-size:28px;
+font-size:32px;
 
-margin-bottom:15px;
-
-letter-spacing:2px;
+margin-bottom:20px;
 
 }
 
-.info{
+.top{
 
 display:flex;
 
-gap:10px;
+gap:15px;
 
-margin-bottom:15px;
+margin-bottom:20px;
+
+flex-wrap:wrap;
 
 }
 
@@ -69,13 +58,15 @@ margin-bottom:15px;
 
 flex:1;
 
-background:rgba(255,255,255,.08);
+background:#13263d;
 
-border-radius:12px;
+border-radius:15px;
 
-padding:10px;
+padding:18px;
 
 text-align:center;
+
+box-shadow:0 5px 15px rgba(0,0,0,.4);
 
 }
 
@@ -83,27 +74,29 @@ text-align:center;
 
 font-size:14px;
 
-margin-bottom:5px;
+margin-bottom:8px;
+
+color:#9ecbff;
 
 }
 
 .card p{
 
-font-size:24px;
+font-size:30px;
 
 font-weight:bold;
 
-color:#79d6ff;
-
 }
 
-.table-container{
+.tableBox{
 
-overflow-x:auto;
+background:#13263d;
 
--webkit-overflow-scrolling:touch;
+border-radius:15px;
 
-border-radius:12px;
+overflow:auto;
+
+box-shadow:0 5px 15px rgba(0,0,0,.4);
 
 }
 
@@ -113,47 +106,91 @@ width:100%;
 
 border-collapse:collapse;
 
-table-layout:fixed;
+min-width:950px;
 
-background:rgba(255,255,255,.05);
+}
+
+thead{
+
+position:sticky;
+
+top:0;
+
+z-index:999;
 
 }
 
 th{
 
-background:#2d82ff;
+background:#1b4e87;
 
-padding:6px;
+padding:12px;
 
-font-size:11px;
+font-size:13px;
 
-word-break:break-word;
+text-align:center;
 
 }
 
 td{
 
-padding:6px;
-
-font-size:11px;
+padding:11px;
 
 text-align:center;
 
-word-break:break-word;
+font-size:13px;
 
 border-bottom:1px solid rgba(255,255,255,.08);
 
 }
 
-tr:nth-child(even){
+tbody tr:nth-child(even){
 
-background:rgba(255,255,255,.03);
+background:#17304d;
 
 }
 
-tr:hover{
+tbody tr:hover{
 
-background:rgba(255,255,255,.08);
+background:#1d3c61;
+
+}
+
+.positivo{
+
+color:#38ff7b;
+
+font-weight:bold;
+
+}
+
+.negativo{
+
+color:#ff5b5b;
+
+font-weight:bold;
+
+}
+
+.acumulado{
+
+color:#6bc5ff;
+
+font-weight:bold;
+
+}
+
+footer{
+
+margin-top:20px;
+
+text-align:center;
+
+color:#8fa8c4;
+
+font-size:13px;
+
+letter-spacing:3px;
 
 }
 
@@ -161,67 +198,59 @@ background:rgba(255,255,255,.08);
 
 body{
 
-padding:5px;
-
-}
-
-.panel{
-
 padding:8px;
 
 }
 
 h1{
 
-font-size:20px;
-
-margin-bottom:10px;
+font-size:22px;
 
 }
 
-.info{
+.top{
 
-gap:5px;
+gap:8px;
 
 }
 
 .card{
 
-padding:8px;
+padding:10px;
 
 }
 
 .card h2{
 
-font-size:11px;
+font-size:12px;
 
 }
 
 .card p{
 
-font-size:18px;
+font-size:22px;
 
 }
 
 table{
 
-font-size:8px;
+min-width:900px;
 
 }
 
 th{
 
-font-size:8px;
+font-size:11px;
 
-padding:3px;
+padding:8px;
 
 }
 
 td{
 
-font-size:8px;
+font-size:11px;
 
-padding:3px;
+padding:8px;
 
 }
 
@@ -233,29 +262,41 @@ padding:3px;
 
 <body>
 
-<div class="panel">
+<div class="container">
 
 <h1>TRANSACCIONES</h1>
 
-<div class="info">
+<div class="top">
 
 <div class="card">
-<h2>Capital Inicial</h2>
+<h2>CAPITAL INICIAL</h2>
 <p id="capitalInicial">-</p>
 </div>
 
 <div class="card">
-<h2>Capital Final</h2>
+<h2>CAPITAL FINAL</h2>
 <p id="capitalFinal">-</p>
 </div>
 
 </div>
 
-<div class="table-container">
+<div class="tableBox">
 
-<table id="tabla"></table>
+<table>
+
+<thead id="thead"></thead>
+
+<tbody id="tbody"></tbody>
+
+</table>
 
 </div>
+
+<footer>
+
+PROYECTO HUGO
+
+</footer>
 
 </div>
 
@@ -263,64 +304,77 @@ padding:3px;
 
 const URL="https://script.google.com/macros/s/AKfycbxcdEgTZeVoH5ESUIdFaTOfOVWuqXMSypVGZONOKG7kkOdpVz3z71cu1KtzrKyUa8PKTw/exec?api=1";
 
-const nombres={
-
-"FECHA":"FECHA",
-
-"MONEDA":"MONEDA",
-
-"CANTIDAD DOLARES":"CANT.",
-
-"PRECIO COMPRA":"COMPRA",
-
-"PRECIO VENTA":"VENTA",
-
-"PORCENTAJE GANANCIA":"%",
-
-"PORCENTAJE DE GANANCIA X":"% X",
-
-"GANANCIA DOLARES":"GAN.",
-
-"GANANCIA ACUMULADA DOLARES":"CAPITAL"
-
-};
-
 async function cargar(){
 
 const r=await fetch(URL);
 
 const datos=await r.json();
 
-document.getElementById("capitalInicial").textContent=datos[1][1];
-document.getElementById("capitalFinal").textContent=datos[2][1];
+document.getElementById("capitalInicial").innerText=datos[1][1];
 
-let html="";
+document.getElementById("capitalFinal").innerText=datos[2][1];
 
-for(let i=5;i<datos.length;i++){
+const encabezados=datos[5];
 
-html+="<tr>";
+let head="<tr>";
+
+encabezados.forEach(c=>head+="<th>"+c+"</th>");
+
+head+="</tr>";
+
+document.getElementById("thead").innerHTML=head;
+
+let body="";
+
+for(let i=6;i<datos.length;i++){
+
+body+="<tr>";
 
 for(let j=0;j<datos[i].length;j++){
 
-if(i==5){
+let valor=datos[i][j];
 
-const titulo=nombres[datos[i][j]] || datos[i][j];
+if(j==7){
 
-html+="<th>"+titulo+"</th>";
+let n=parseFloat(String(valor).replace(",","."))
+
+if(!isNaN(n)){
+
+if(n>=0)
+
+body+='<td class="positivo">'+valor+'</td>';
+
+else
+
+body+='<td class="negativo">'+valor+'</td>';
 
 }else{
 
-html+="<td>"+datos[i][j]+"</td>";
+body+="<td>"+valor+"</td>";
 
 }
 
 }
 
-html+="</tr>";
+else if(j==8){
+
+body+='<td class="acumulado">'+valor+'</td>';
 
 }
 
-document.getElementById("tabla").innerHTML=html;
+else{
+
+body+="<td>"+valor+"</td>";
+
+}
+
+}
+
+body+="</tr>";
+
+}
+
+document.getElementById("tbody").innerHTML=body;
 
 }
 
