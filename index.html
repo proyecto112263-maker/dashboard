@@ -23,6 +23,7 @@ min-height:100vh;
 .container{
 max-width:900px;
 margin:auto;
+position:relative;
 }
 
 h1{
@@ -991,6 +992,54 @@ letter-spacing:3px;
 color:#7f8c99;
 }
 
+/* =========================================================
+   ROBOT 3D FLOTANTE EN LA ESQUINA (mascota de soporte)
+   ========================================================= */
+.robot-esquina{
+position:absolute;
+right:8px;
+top:8px;
+width:60px;
+height:92px;
+z-index:50;
+cursor:pointer;
+pointer-events:auto;
+filter:drop-shadow(0 6px 10px rgba(0,0,0,.22));
+transition:transform .25s ease;
+}
+
+.robot-esquina:hover{
+transform:translateY(-4px) scale(1.05);
+}
+
+.robot-esquina canvas{
+width:100%;
+height:100%;
+display:block;
+}
+
+.robot-esquina .etiqueta-esquina{
+position:absolute;
+top:-4px;
+left:50%;
+transform:translateX(-50%);
+background:#1d3557;
+color:#fff;
+font-size:10px;
+font-weight:700;
+padding:3px 8px;
+border-radius:10px;
+white-space:nowrap;
+opacity:0;
+transition:opacity .2s ease;
+pointer-events:none;
+box-shadow:0 3px 8px rgba(0,0,0,.25);
+}
+
+.robot-esquina:hover .etiqueta-esquina{
+opacity:1;
+}
+
 @media(max-width:700px){
 body{ padding:8px; }
 h1{ font-size:22px; }
@@ -1001,6 +1050,7 @@ h1{ font-size:22px; }
 .item span:first-child{ font-size:11px; }
 .item span:last-child{ font-size:12px; }
 .grid-metodos{ grid-template-columns:1fr; }
+.robot-esquina{ width:46px; height:72px; right:5px; top:5px; }
 }
 </style>
 </head>
@@ -1191,6 +1241,13 @@ PROYECTO HUGO
 
 </div>
 
+<!-- ================= ROBOT 3D FLOTANTE (ESQUINA) ================= -->
+<div class="robot-esquina" id="robotEsquina" onclick="abrirSoporte()" title="Soporte Técnico">
+  <div class="etiqueta-esquina">¿Necesitas ayuda?</div>
+  <canvas id="cRobotEsquina"></canvas>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 const URL="https://script.google.com/macros/s/AKfycbxcdEgTZeVoH5ESUIdFaTOfOVWuqXMSypVGZONOKG7kkOdpVz3z71cu1KtzrKyUa8PKTw/exec?api=1";
 
@@ -1289,6 +1346,431 @@ async function cargar(){
 
 cargar();
 setInterval(cargar,5000);
+
+/* =========================================================
+   ROBOT 3D FLOTANTE CON PROPULSOR — versión reducida para
+   vivir de forma permanente en la esquina de la pantalla
+   ========================================================= */
+function buildFloatingRobotCorner(canvasId){
+
+  const w=60,h=92;
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(28,w/h,0.1,100);
+  camera.position.set(0.4,-1.35,19.5);
+  const renderer=new THREE.WebGLRenderer({canvas:document.getElementById(canvasId),alpha:true,antialias:true});
+  renderer.setSize(w,h,false);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
+
+  scene.add(new THREE.AmbientLight(0xffffff,0.28));
+
+  const key=new THREE.DirectionalLight(0xfff4e0,1.2);
+  key.position.set(3,5,6);
+  key.castShadow=true;
+  key.shadow.mapSize.set(512,512);
+  key.shadow.radius=6;
+  key.shadow.camera.near=1;
+  key.shadow.camera.far=20;
+  key.shadow.camera.left=-6;
+  key.shadow.camera.right=6;
+  key.shadow.camera.top=6;
+  key.shadow.camera.bottom=-6;
+  scene.add(key);
+
+  const fill=new THREE.DirectionalLight(0xcfe6ff,0.38);
+  fill.position.set(-4,1,3);
+  scene.add(fill);
+
+  const back=new THREE.DirectionalLight(0x49A6FF,0.6);
+  back.position.set(-2,3,-5);
+  scene.add(back);
+
+  const hero=new THREE.SpotLight(0xffffff,0.55,10,0.35,0.6,1.2);
+  hero.position.set(1.4,2.6,5.5);
+  scene.add(hero);
+
+  const bounce=new THREE.PointLight(0x49A6FF,0.9,7,2);
+  bounce.position.set(0,-3.4,1.2);
+  scene.add(bounce);
+
+  const whiteMat=new THREE.MeshPhysicalMaterial({color:0xF8F9FA,metalness:0.1,roughness:0.22,clearcoat:0.55,clearcoatRoughness:0.28});
+  const darkMat=new THREE.MeshPhysicalMaterial({color:0xDDE0E4,metalness:0.25,roughness:0.32,clearcoat:0.3,clearcoatRoughness:0.35});
+  const nozzleMat=new THREE.MeshStandardMaterial({color:0x1c2128,metalness:0.6,roughness:0.3});
+  const glowMat=new THREE.MeshBasicMaterial({color:0x49A6FF,transparent:true,opacity:0.55});
+  const glowMatSoft=new THREE.MeshBasicMaterial({color:0x49A6FF,transparent:true,opacity:0.22});
+
+  const root=new THREE.Group(); scene.add(root);
+
+  function makeSoftParticleTexture(){
+    const size=64;
+    const cnv=document.createElement("canvas");
+    cnv.width=size; cnv.height=size;
+    const ctx=cnv.getContext("2d");
+    const g=ctx.createRadialGradient(size/2,size/2,0,size/2,size/2,size/2);
+    g.addColorStop(0,"rgba(255,255,255,1)");
+    g.addColorStop(0.35,"rgba(255,255,255,0.85)");
+    g.addColorStop(1,"rgba(255,255,255,0)");
+    ctx.fillStyle=g;
+    ctx.fillRect(0,0,size,size);
+    return new THREE.CanvasTexture(cnv);
+  }
+  const particleTexture=makeSoftParticleTexture();
+
+  function createParticleSystem(opts){
+    const count=opts.count;
+    const positions=new Float32Array(count*3);
+    const colors=new Float32Array(count*3);
+    const state=[];
+
+    function respawn(p){
+      const angle=Math.random()*Math.PI*2;
+      const r=Math.random()*opts.spawnRadius;
+      p.x=Math.cos(angle)*r;
+      p.y=-Math.random()*0.2;
+      p.z=Math.sin(angle)*r;
+      p.vx=Math.cos(angle)*opts.spread*Math.random();
+      p.vy=-(opts.speed*(0.6+Math.random()*0.7));
+      p.vz=Math.sin(angle)*opts.spread*Math.random();
+      p.life=opts.minLife+Math.random()*(opts.maxLife-opts.minLife);
+      p.maxLife=p.life;
+      p.seed=Math.random()*10;
+    }
+
+    for(let i=0;i<count;i++){
+      const p={x:0,y:0,z:0,vx:0,vy:0,vz:0,life:0,maxLife:1,seed:0};
+      respawn(p);
+      p.life=Math.random()*p.maxLife;
+      state.push(p);
+      positions[i*3]=p.x; positions[i*3+1]=p.y; positions[i*3+2]=p.z;
+    }
+
+    const geo=new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(positions,3));
+    geo.setAttribute("color", new THREE.BufferAttribute(colors,3));
+
+    const mat=new THREE.PointsMaterial({
+      size:opts.size,
+      map:particleTexture,
+      vertexColors:true,
+      transparent:true,
+      depthWrite:false,
+      blending:THREE.AdditiveBlending,
+      sizeAttenuation:true
+    });
+
+    const points=new THREE.Points(geo,mat);
+    points.position.y=opts.originY;
+    points.frustumCulled=false;
+
+    function update(dt,t){
+      const posAttr=geo.attributes.position;
+      const colAttr=geo.attributes.color;
+      for(let i=0;i<count;i++){
+        const p=state[i];
+        p.life-=dt;
+        if(p.life<=0){ respawn(p); }
+
+        const turbulence=Math.sin(t*3+p.seed)*opts.turbulence;
+        p.x+=(p.vx+turbulence)*dt;
+        p.y+=p.vy*dt;
+        p.z+=(p.vz+Math.cos(t*2.4+p.seed)*opts.turbulence)*dt;
+        p.vy-=opts.gravity*dt;
+
+        const lifeFrac=Math.max(0,p.life/p.maxLife);
+        posAttr.array[i*3]=p.x;
+        posAttr.array[i*3+1]=p.y;
+        posAttr.array[i*3+2]=p.z;
+
+        const fade=lifeFrac*lifeFrac;
+        colAttr.array[i*3]=opts.color.r*fade;
+        colAttr.array[i*3+1]=opts.color.g*fade;
+        colAttr.array[i*3+2]=opts.color.b*fade;
+      }
+      posAttr.needsUpdate=true;
+      colAttr.needsUpdate=true;
+    }
+
+    return {points:points, update:update};
+  }
+
+  const thrusterGroup=new THREE.Group();
+  root.add(thrusterGroup);
+
+  const nozzle=new THREE.Mesh(new THREE.CylinderGeometry(0.55,0.42,0.5,36),nozzleMat);
+  nozzle.position.y=-3.05;
+  thrusterGroup.add(nozzle);
+
+  const ringTrim=new THREE.Mesh(new THREE.TorusGeometry(0.44,0.045,16,48),darkMat);
+  ringTrim.rotation.x=Math.PI/2;
+  ringTrim.position.y=-3.28;
+  thrusterGroup.add(ringTrim);
+
+  const flame=new THREE.Mesh(new THREE.ConeGeometry(0.32,1.0,32,1,true),glowMat);
+  flame.position.y=-3.75;
+  thrusterGroup.add(flame);
+
+  const flameCore=new THREE.Mesh(new THREE.ConeGeometry(0.15,0.6,28,1,true),new THREE.MeshBasicMaterial({color:0x6FC1FF,transparent:true,opacity:0.85,blending:THREE.AdditiveBlending,depthWrite:false}));
+  flameCore.position.y=-3.6;
+  thrusterGroup.add(flameCore);
+
+  const haze=new THREE.Mesh(new THREE.SphereGeometry(0.85,32,32),glowMatSoft);
+  haze.position.y=-3.65;
+  haze.scale.set(1,0.6,1);
+  thrusterGroup.add(haze);
+
+  const smokeFX=createParticleSystem({
+    count:50,
+    originY:-3.35,
+    spawnRadius:0.16,
+    speed:2.6,
+    spread:0.55,
+    turbulence:0.35,
+    gravity:-0.15,
+    minLife:0.55,
+    maxLife:1.1,
+    size:0.55,
+    color:new THREE.Color(0x49A6FF)
+  });
+  thrusterGroup.add(smokeFX.points);
+
+  const sparksFX=createParticleSystem({
+    count:60,
+    originY:-3.3,
+    spawnRadius:0.1,
+    speed:4.2,
+    spread:1.6,
+    turbulence:0.6,
+    gravity:2.4,
+    minLife:0.25,
+    maxLife:0.6,
+    size:0.14,
+    color:new THREE.Color(0xCFE9FF)
+  });
+  thrusterGroup.add(sparksFX.points);
+
+  const torso=new THREE.Mesh(new THREE.CylinderGeometry(0.95,1.15,2.0,40),whiteMat);
+  torso.position.y=-1.7;
+  root.add(torso);
+
+  const chestPanel=new THREE.Mesh(new THREE.BoxGeometry(0.6,0.8,0.14),darkMat);
+  chestPanel.position.set(0,-1.55,0.98);
+  root.add(chestPanel);
+  const chestLight=new THREE.Mesh(new THREE.CircleGeometry(0.12,24),new THREE.MeshBasicMaterial({color:0x49A6FF}));
+  chestLight.position.set(0,-1.55,1.06);
+  root.add(chestLight);
+
+  function buildArm(side){
+    const shoulder=new THREE.Group();
+    const shoulderBall=new THREE.Mesh(new THREE.SphereGeometry(0.28,28,28),whiteMat);
+    shoulder.add(shoulderBall);
+    const upperArm=new THREE.Mesh(new THREE.CylinderGeometry(0.19,0.16,0.95,24),whiteMat);
+    upperArm.position.y=-0.5;
+    shoulder.add(upperArm);
+    const elbow=new THREE.Mesh(new THREE.SphereGeometry(0.17,24,24),darkMat);
+    elbow.position.y=-0.95;
+    shoulder.add(elbow);
+    const foreArm=new THREE.Group();
+    foreArm.position.y=-0.95;
+    const lower=new THREE.Mesh(new THREE.CylinderGeometry(0.14,0.12,0.85,24),whiteMat);
+    lower.position.y=-0.45;
+    foreArm.add(lower);
+    const hand=new THREE.Mesh(new THREE.SphereGeometry(0.16,24,24),whiteMat);
+    hand.position.y=-0.88;
+    foreArm.add(hand);
+    shoulder.add(foreArm);
+    shoulder.position.set(side*1.18,-0.85,0);
+    shoulder.rotation.z=-side*0.18;
+    return {group:shoulder, foreArm:foreArm};
+  }
+  const armR=buildArm(1); root.add(armR.group);
+  const armL=buildArm(-1); root.add(armL.group);
+
+  const neck=new THREE.Mesh(new THREE.CylinderGeometry(0.28,0.3,0.35,28),darkMat);
+  neck.position.y=0.42;
+  root.add(neck);
+
+  const headGroup=new THREE.Group();
+  headGroup.position.y=0.95;
+  root.add(headGroup);
+
+  const head=new THREE.Mesh(new THREE.BoxGeometry(1.9,1.6,1.65,5,5,5),whiteMat);
+  headGroup.add(head);
+
+  const visor=new THREE.Mesh(new THREE.BoxGeometry(1.65,0.62,0.15),new THREE.MeshStandardMaterial({color:0x0b1420,metalness:0.25,roughness:0.15}));
+  visor.position.set(0,0.06,0.83);
+  headGroup.add(visor);
+
+  function buildLedEye(side){
+
+    const eyeGroup=new THREE.Group();
+    eyeGroup.position.set(side*0.4,0.07,0.95);
+
+    const socket=new THREE.Mesh(
+      new THREE.CircleGeometry(0.28,32),
+      new THREE.MeshStandardMaterial({color:0x040608,metalness:0.1,roughness:0.6})
+    );
+    socket.position.z=-0.01;
+    eyeGroup.add(socket);
+
+    const outer=new THREE.Mesh(
+      new THREE.CircleGeometry(0.28,32),
+      new THREE.MeshBasicMaterial({color:0x1E6FFF,transparent:true,opacity:0.5,blending:THREE.AdditiveBlending,depthWrite:false})
+    );
+    outer.position.z=0.012;
+    eyeGroup.add(outer);
+
+    const mid=new THREE.Mesh(
+      new THREE.CircleGeometry(0.19,32),
+      new THREE.MeshBasicMaterial({color:0x2F8CFF,transparent:true,opacity:0.75,blending:THREE.AdditiveBlending,depthWrite:false})
+    );
+    mid.position.z=0.02;
+    eyeGroup.add(mid);
+
+    const core=new THREE.Mesh(
+      new THREE.CircleGeometry(0.1,28),
+      new THREE.MeshBasicMaterial({color:0x4FA6FF,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false})
+    );
+    core.position.z=0.028;
+    eyeGroup.add(core);
+
+    const beam=new THREE.Mesh(
+      new THREE.ConeGeometry(0.34,1.6,24,1,true),
+      new THREE.MeshBasicMaterial({color:0x2F8CFF,transparent:true,opacity:0.16,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide})
+    );
+    beam.rotation.x=-Math.PI/2;
+    beam.position.z=0.85;
+    eyeGroup.add(beam);
+
+    const led=new THREE.PointLight(0x2F8CFF,1.6,2.2,2);
+    led.position.z=0.15;
+    eyeGroup.add(led);
+
+    return {group:eyeGroup, outer:outer, mid:mid, core:core, beam:beam, led:led};
+  }
+
+  const leftEye=buildLedEye(-1);
+  const rightEye=buildLedEye(1);
+  headGroup.add(leftEye.group);
+  headGroup.add(rightEye.group);
+
+  root.traverse(function(obj){
+    if(obj.isMesh && obj.material && obj.material.type !== "MeshBasicMaterial"){
+      obj.castShadow = true;
+      obj.receiveShadow = true;
+    }
+  });
+
+  let targetRotY=0,targetRotX=0;
+  let idleTargetY=0,idleTargetX=0;
+  let usingMouse=false, mouseTimeout=null;
+  let clockT=0;
+  let blinkT=0, nextBlink=1.8+Math.random()*2.6;
+  let waveActive=false;
+
+  function updateGaze(clientX,clientY){
+    usingMouse=true;
+    clearTimeout(mouseTimeout);
+    mouseTimeout=setTimeout(()=>{usingMouse=false;},2200);
+    const rect=renderer.domElement.getBoundingClientRect();
+    const cx=rect.left+rect.width/2, cy=rect.top+rect.height*0.35;
+    const dx=(clientX-cx)/window.innerWidth, dy=(clientY-cy)/window.innerHeight;
+    targetRotY=Math.max(-0.55,Math.min(0.55,dx*1.7));
+    targetRotX=Math.max(-0.3,Math.min(0.3,-dy*1.4));
+  }
+  window.addEventListener("mousemove",e=>updateGaze(e.clientX,e.clientY));
+  window.addEventListener("touchmove",e=>{
+    if(e.touches&&e.touches[0]){ updateGaze(e.touches[0].clientX,e.touches[0].clientY); }
+  },{passive:true});
+
+  function pickIdleGlance(){
+    idleTargetY=(Math.random()-0.5)*0.7;
+    idleTargetX=(Math.random()-0.5)*0.3;
+    setTimeout(pickIdleGlance, 1800+Math.random()*2200);
+  }
+  pickIdleGlance();
+
+  function wave(){
+    waveActive=true;
+    let t=0;
+    const id=setInterval(()=>{
+      t+=1;
+      armR.group.rotation.z=-0.18+Math.sin(t*0.5)*0.95;
+      armR.foreArm.rotation.z=Math.sin(t*0.9)*0.4;
+      if(t>16){
+        clearInterval(id);
+        armR.group.rotation.z=-0.18;
+        armR.foreArm.rotation.z=0;
+        waveActive=false;
+      }
+    },55);
+  }
+  function scheduleWave(){
+    setTimeout(()=>{ wave(); scheduleWave(); }, 5000+Math.random()*4000);
+  }
+  scheduleWave();
+
+  function tick(){
+    requestAnimationFrame(tick);
+    clockT+=0.018;
+
+    const hover=Math.sin(clockT*1.15)*0.11;
+    root.position.y=hover;
+    root.rotation.z=Math.sin(clockT*0.5)*0.035;
+    root.rotation.y=Math.sin(clockT*0.35)*0.05;
+    thrusterGroup.rotation.z=root.rotation.z*-0.6;
+
+    torso.scale.set(1+Math.sin(clockT*1.6)*0.012,1+Math.sin(clockT*1.6)*0.02,1+Math.sin(clockT*1.6)*0.012);
+
+    const flicker=0.85+Math.sin(clockT*9)*0.1+Math.sin(clockT*23)*0.05;
+    flame.scale.set(flicker,1+Math.sin(clockT*7)*0.12,flicker);
+    flame.material.opacity=0.4+Math.abs(Math.sin(clockT*6))*0.2;
+    flameCore.scale.set(flicker*0.9,1+Math.sin(clockT*11)*0.18,flicker*0.9);
+    haze.material.opacity=0.12+Math.abs(Math.sin(clockT*2.4))*0.12;
+    haze.scale.set(1+Math.sin(clockT*1.8)*0.1,0.55+Math.sin(clockT*1.8)*0.08,1+Math.sin(clockT*1.8)*0.1);
+    chestLight.material.opacity=0.6+Math.sin(clockT*2.2)*0.3;
+
+    smokeFX.update(0.018, clockT);
+    sparksFX.update(0.018, clockT);
+
+    const gy=usingMouse?targetRotY:idleTargetY;
+    const gx=usingMouse?targetRotX:idleTargetX;
+    headGroup.rotation.y+=(gy-headGroup.rotation.y)*0.06;
+    headGroup.rotation.x+=(gx-headGroup.rotation.x)*0.06;
+
+    blinkT+=0.018;
+    if(blinkT>nextBlink){
+      const phase=(blinkT-nextBlink)*14;
+      const s=phase<1?Math.max(0.05,1-phase):(phase<2?Math.min(1,phase-1):1);
+      [leftEye,rightEye].forEach(function(eye){
+        eye.group.scale.y=s;
+        eye.led.intensity=1.6*s;
+      });
+      if(phase>2){
+        blinkT=0; nextBlink=2+Math.random()*3.5;
+        leftEye.group.scale.y=1; rightEye.group.scale.y=1;
+        leftEye.led.intensity=1.6; rightEye.led.intensity=1.6;
+      }
+    }else{
+      const shimmer=0.92+Math.sin(clockT*5)*0.08;
+      leftEye.led.intensity=1.6*shimmer;
+      rightEye.led.intensity=1.6*shimmer;
+    }
+
+    if(!waveActive){
+      armL.group.rotation.z=0.18+Math.sin(clockT*0.9)*0.03;
+      armR.group.rotation.z=-0.18+Math.sin(clockT*0.9+1)*0.03;
+    }
+
+    renderer.render(scene,camera);
+  }
+  tick();
+}
+
+buildFloatingRobotCorner("cRobotEsquina");
 </script>
 </body>
 </html>
