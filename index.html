@@ -90,6 +90,7 @@ background:linear-gradient(180deg,#1d3557,#274472);
 border-radius:38px;
 padding:22px 18px 30px 18px;
 box-shadow:0 20px 40px rgba(0,0,0,.25);
+position:relative;
 }
 
 .notch{
@@ -339,510 +340,86 @@ text-align:center;
 }
 
 /* =========================================================
-   SOPORTE TECNICO: PUERTA REALISTA + OFICINA CON ILUMINACION
+   SOPORTE TECNICO: ESCENA ESPACIAL CON ROBOT Y ESTRELLAS
    ========================================================= */
-.escena-soporte{
+.escena-espacio{
 position:relative;
 max-width:400px;
 margin:10px auto 0 auto;
 min-height:540px;
-background:linear-gradient(180deg,#4a2f1a,#33200f);
+background:radial-gradient(ellipse at 50% 30%,#141c3a 0%,#0a0e21 55%,#05060f 100%);
 border-radius:24px;
-padding:14px;
-box-shadow:0 15px 30px rgba(0,0,0,.3), inset 0 0 0 3px rgba(0,0,0,.2);
-}
-
-.interior-puerta{
-position:absolute;
-inset:14px;
-border-radius:14px;
+padding:20px 16px;
 overflow:hidden;
-background:#0c1420;
-perspective:1300px;
+box-shadow:0 15px 30px rgba(0,0,0,.35), inset 0 0 0 3px rgba(255,255,255,.03);
+display:flex;
+flex-direction:column;
+align-items:center;
 }
 
-/* ---- OFICINA (detrás de la puerta) ---- */
-.oficina{
+.campo-estrellas{
 position:absolute;
 inset:0;
-display:flex;
-flex-direction:column;
-opacity:0;
-transition:opacity .5s ease .35s;
+z-index:0;
+pointer-events:none;
 }
 
-.escena-soporte.abierta .oficina{
-opacity:1;
-}
-
-/* pared con ventana, recibiendo luz */
-.pared-ventana{
-position:relative;
-height:150px;
-flex-shrink:0;
-background:linear-gradient(180deg,#e9eff5,#d7e1ec);
-overflow:hidden;
-}
-
-.ventana{
+.estrella{
 position:absolute;
-top:16px;
-left:50%;
-transform:translateX(-50%);
-width:150px;
-height:104px;
-background:#5a3c22;
-border-radius:6px;
-padding:6px;
-box-shadow:0 6px 14px rgba(0,0,0,.25);
-z-index:2;
-}
-
-.cristal{
-position:relative;
-width:100%;
-height:100%;
-border-radius:3px;
-overflow:hidden;
-background:linear-gradient(180deg,#78c0ec 0%,#bfe3f7 55%,#eef8ff 100%);
-}
-
-.cristal::before{
-content:"";
-position:absolute;
-top:0;
-left:50%;
-width:3px;
-height:100%;
-background:#5a3c22;
-transform:translateX(-50%);
-}
-
-.cristal::after{
-content:"";
-position:absolute;
-top:50%;
-left:0;
-width:100%;
-height:3px;
-background:#5a3c22;
-transform:translateY(-50%);
-}
-
-.sol{
-position:absolute;
-top:12px;
-right:16px;
-width:22px;
-height:22px;
-background:radial-gradient(circle,#fff6c8 0%,#ffe27a 55%,rgba(255,226,122,0) 75%);
 border-radius:50%;
-box-shadow:0 0 20px 9px rgba(255,226,122,.5);
+background:#ffffff;
+box-shadow:0 0 4px 1px rgba(255,255,255,.8);
+animation:titilar ease-in-out infinite;
 }
 
-/* haz de luz volumétrico: varias capas + desenfoque para efecto tipo shader */
-.rayos-luz{
+@keyframes titilar{
+0%,100%{ opacity:.25; transform:scale(.8); }
+50%{ opacity:1; transform:scale(1.15); }
+}
+
+.nebulosa{
 position:absolute;
-top:6px;
-left:22%;
-width:64%;
-height:340%;
-background:
-  linear-gradient(112deg,rgba(255,251,225,.65) 0%,rgba(255,251,225,.22) 30%,rgba(255,251,225,0) 55%),
-  linear-gradient(112deg,rgba(255,251,225,.4) 10%,rgba(255,251,225,0) 45%);
-transform:skewX(-16deg);
-filter:blur(3px);
-opacity:0;
-transition:opacity 1.1s ease .9s;
+border-radius:50%;
+filter:blur(30px);
+opacity:.35;
 pointer-events:none;
-z-index:3;
-mix-blend-mode:screen;
-}
-
-.escena-soporte.abierta .rayos-luz{
-opacity:1;
-animation:respirarLuz 4s ease-in-out infinite 1.3s;
-}
-
-@keyframes respirarLuz{
-0%,100%{opacity:.8; filter:blur(3px);}
-50%{opacity:1; filter:blur(4px);}
-}
-
-/* charco de luz cálida sobre el piso, debajo de la ventana */
-.charco-luz{
-position:absolute;
-bottom:-10px;
-left:50%;
-transform:translateX(-50%);
-width:170px;
-height:46px;
-background:radial-gradient(ellipse,rgba(255,236,180,.55) 0%,rgba(255,236,180,.15) 55%,rgba(255,236,180,0) 80%);
-filter:blur(4px);
-opacity:0;
-transition:opacity 1.1s ease 1s;
-mix-blend-mode:screen;
-z-index:1;
-pointer-events:none;
-}
-
-.escena-soporte.abierta .charco-luz{
-opacity:1;
-}
-
-/* piso con escritorio y computadora */
-.piso-oficina{
-position:relative;
-flex:1;
-background:repeating-linear-gradient(90deg,#c99a63 0px,#c99a63 34px,#bd8c56 34px,#bd8c56 36px);
-overflow:hidden;
-}
-
-.zona-escritorio{
-position:absolute;
-bottom:0;
-left:50%;
-transform:translateX(-50%);
-width:80%;
-height:100%;
-}
-
-.sombra-robot{
-position:absolute;
-bottom:2px;
-left:50%;
-transform:translateX(-50%);
-width:60px;
-height:14px;
-background:radial-gradient(ellipse,rgba(0,0,0,.4) 0%,rgba(0,0,0,0) 75%);
-filter:blur(2px);
 z-index:0;
 }
 
-/* ---- ROBOT (construido con CSS, no emoji) ---- */
-.robot{
-position:absolute;
-bottom:16px;
-left:50%;
-transform:translateX(-50%) scale(.82);
-display:flex;
-flex-direction:column;
-align-items:center;
+.nebulosa.n1{
+width:220px;
+height:220px;
+top:-60px;
+left:-60px;
+background:radial-gradient(circle,#6a3fbf,transparent 70%);
+}
+
+.nebulosa.n2{
+width:180px;
+height:180px;
+bottom:-50px;
+right:-50px;
+background:radial-gradient(circle,#2f6fbf,transparent 70%);
+}
+
+.contenedor-robot-espacio{
+position:relative;
 z-index:2;
-transition:opacity .4s ease, transform .4s ease;
-}
-
-.robot-antena{
-position:relative;
-width:2px;
-height:9px;
-background:linear-gradient(#aeb8c4,#7c8898);
-}
-
-.luz-antena{
-position:absolute;
-top:-5px;
-left:50%;
-transform:translateX(-50%);
-width:6px;
-height:6px;
-border-radius:50%;
-background:radial-gradient(circle,#ffdca8,#ff8a3d 70%);
-box-shadow:0 0 6px 2px rgba(255,138,61,.85);
-animation:parpadeoAntena 1.6s ease-in-out infinite;
-}
-
-@keyframes parpadeoAntena{
-0%,100%{ opacity:.5; }
-50%{ opacity:1; }
-}
-
-.robot-cabeza{
-width:34px;
-height:26px;
-margin-top:-3px;
-border-radius:10px 10px 8px 8px;
-background:linear-gradient(135deg,#f4f8fb 0%,#cad4e0 28%,#8d97a6 52%,#cad4e0 76%,#f4f8fb 100%);
-box-shadow:inset 0 -3px 5px rgba(0,0,0,.28), inset 0 2px 3px rgba(255,255,255,.75), 0 3px 6px rgba(0,0,0,.35);
-position:relative;
-overflow:hidden;
-}
-
-.robot-visor{
-position:absolute;
-top:9px;
-left:50%;
-transform:translateX(-50%);
-width:22px;
-height:9px;
-background:#0b1520;
-border-radius:5px;
-display:flex;
-align-items:center;
-justify-content:center;
-gap:4px;
-box-shadow:inset 0 0 4px rgba(0,0,0,.85);
-}
-
-.ojo{
-width:5px;
-height:5px;
-border-radius:50%;
-background:#5be3ff;
-box-shadow:0 0 6px 2px rgba(91,227,255,.9);
-animation:parpadeoOjos 3.6s ease-in-out infinite;
-}
-.ojo:nth-child(2){ animation-delay:.12s; }
-
-@keyframes parpadeoOjos{
-0%,90%,100%{ opacity:1; transform:scaleY(1); }
-94%{ opacity:.25; transform:scaleY(.15); }
-}
-
-.robot-cuerpo{
-width:40px;
-height:34px;
-margin-top:-4px;
-border-radius:10px;
-background:linear-gradient(135deg,#f0f5fa 0%,#c3cedb 25%,#8b97a8 50%,#c3cedb 75%,#f0f5fa 100%);
-box-shadow:inset 0 -4px 6px rgba(0,0,0,.25), inset 0 3px 4px rgba(255,255,255,.6), 0 4px 8px rgba(0,0,0,.35);
-position:relative;
-overflow:hidden;
-}
-
-.panel-pecho{
-position:absolute;
-top:8px;
-left:50%;
-transform:translateX(-50%);
-width:18px;
-height:14px;
-border-radius:4px;
-background:#0b1520;
-box-shadow:inset 0 0 4px rgba(0,0,0,.85);
-overflow:hidden;
-}
-
-.panel-pecho::before{
-content:"";
-position:absolute;
-inset:3px;
-border-radius:2px;
-background:linear-gradient(90deg,#63d8ff,#8fe89a);
-opacity:.4;
-animation:pulsoPanel 2s ease-in-out infinite;
-}
-
-@keyframes pulsoPanel{
-0%,100%{ opacity:.3; }
-50%{ opacity:.65; }
-}
-
-/* brillo especular animado: simula luz de shader recorriendo el metal */
-.brillo{
-position:absolute;
-top:0;
-left:-70%;
-width:35%;
-height:100%;
-background:linear-gradient(115deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.7) 50%,rgba(255,255,255,0) 100%);
-transform:skewX(-20deg);
-animation:brilloBarrido 3.8s ease-in-out infinite;
-pointer-events:none;
-}
-
-.robot-cuerpo .brillo{ animation-delay:.35s; }
-
-@keyframes brilloBarrido{
-0%{ left:-70%; }
-30%,100%{ left:140%; }
-}
-
-.robot-brazo{
-position:absolute;
-top:64px;
-width:8px;
-height:18px;
-border-radius:4px;
-background:linear-gradient(135deg,#e8edf3,#9aa6b5);
-box-shadow:inset 0 -2px 3px rgba(0,0,0,.25);
-transform-origin:top center;
-}
-
-.robot-brazo.izq{ left:1px; transform:rotate(10deg); }
-.robot-brazo.der{ right:1px; transform:rotate(-10deg); }
-
-.robot.tecleando{
-animation:tecleando 1.1s ease-in-out infinite;
-}
-
-@keyframes tecleando{
-0%,100%{ transform:translateX(-50%) scale(.82) translateY(0); }
-50%{ transform:translateX(-50%) scale(.82) translateY(-2px); }
-}
-
-.escena-soporte.de-pie .robot.tecleando{
-opacity:0;
-transform:translateX(-50%) scale(.7) translateY(6px);
-animation:none;
-}
-
-.robot.saludando{
-bottom:auto;
-position:relative;
-transform:scale(1.35);
-opacity:0;
-margin-top:-6px;
-}
-
-.escena-soporte.de-pie .robot.saludando{
-opacity:1;
-animation:flotarRobot 2.8s ease-in-out infinite .6s;
-}
-
-@keyframes flotarRobot{
-0%,100%{ transform:scale(1.35) translateY(0) rotate(0deg); }
-50%{ transform:scale(1.35) translateY(-5px) rotate(-2deg); }
-}
-
-.escena-soporte.de-pie .robot.saludando .robot-brazo.der{
-animation:saludoBrazo 1.3s ease-in-out infinite;
-}
-
-@keyframes saludoBrazo{
-0%,100%{ transform:rotate(-35deg); }
-50%{ transform:rotate(-75deg); }
-}
-
-.silla{
-position:absolute;
-bottom:6px;
-left:50%;
-transform:translateX(-50%);
-width:36px;
-height:28px;
-z-index:0;
-opacity:.9;
-}
-
-.silla::before{
-content:"";
-position:absolute;
-bottom:0;
-width:100%;
-height:6px;
-background:linear-gradient(180deg,#2e3138,#1c1e23);
-border-radius:2px;
-}
-
-.silla::after{
-content:"";
-position:absolute;
-bottom:6px;
-left:50%;
-transform:translateX(-50%);
-width:24px;
-height:20px;
-background:linear-gradient(180deg,#3a3f48,#242830);
-border-radius:6px 6px 2px 2px;
-}
-
-.escritorio{
-position:absolute;
-bottom:0;
-left:50%;
-transform:translateX(-50%);
-width:130px;
-height:16px;
-background:linear-gradient(180deg,#8a5a30,#6b4220);
-border-radius:3px;
-box-shadow:0 4px 8px rgba(0,0,0,.35);
-z-index:3;
-}
-
-.escritorio::before,.escritorio::after{
-content:"";
-position:absolute;
-bottom:-24px;
-width:8px;
-height:24px;
-background:#4d2f16;
-}
-
-.escritorio::before{ left:12px; }
-.escritorio::after{ right:12px; }
-
-.compu{
-position:absolute;
-bottom:16px;
-left:50%;
-transform:translateX(-50%);
-display:flex;
-flex-direction:column;
-align-items:center;
-z-index:4;
-}
-
-.monitor{
-width:56px;
-height:38px;
-background:#20242c;
-border-radius:6px;
-padding:4px;
-box-shadow:0 0 14px rgba(120,200,255,.4);
-}
-
-.pantalla-pc{
-width:100%;
-height:100%;
-background:#0c1c2e;
-border-radius:2px;
-padding:4px 5px;
-display:flex;
-flex-direction:column;
-gap:2.5px;
-overflow:hidden;
-}
-
-.linea-codigo{
-height:2px;
-border-radius:2px;
-background:#63d8ff;
-opacity:.85;
-}
-.linea-codigo:nth-child(2){ width:70%; background:#8fe89a; }
-.linea-codigo:nth-child(3){ width:85%; background:#63d8ff; }
-.linea-codigo:nth-child(4){ width:50%; background:#f4c542; }
-.linea-codigo:nth-child(5){ width:65%; background:#63d8ff; }
-
-.pie-monitor{
-width:12px;
-height:6px;
-background:#3a3f4a;
-}
-
-.teclado{
-width:48px;
-height:5px;
-background:#2e3138;
-border-radius:2px;
+width:220px;
+height:280px;
 margin-top:4px;
 }
 
-/* ---- zona inferior: robot de pie, globo y formulario ---- */
-.zona-inferior{
-position:relative;
-flex-shrink:0;
-display:flex;
-flex-direction:column;
-align-items:center;
-padding:6px 20px 20px 20px;
-gap:8px;
+.contenedor-robot-espacio canvas{
+width:100%;
+height:100%;
+display:block;
 }
 
-.globo{
+.globo-espacio{
 position:relative;
-background:white;
+z-index:2;
+background:rgba(255,255,255,.95);
 color:#1d3557;
 padding:10px 16px;
 border-radius:16px;
@@ -852,19 +429,12 @@ max-width:250px;
 width:88%;
 text-align:center;
 line-height:1.4;
-word-wrap:break-word;
-opacity:0;
-transform:translateY(6px);
-transition:opacity .4s ease .2s, transform .4s ease .2s;
-box-shadow:0 6px 14px rgba(0,0,0,.15);
+margin-top:6px;
+margin-bottom:14px;
+box-shadow:0 6px 14px rgba(0,0,0,.25);
 }
 
-.escena-soporte.de-pie .globo{
-opacity:1;
-transform:translateY(0);
-}
-
-.globo::after{
+.globo-espacio::after{
 content:"";
 position:absolute;
 top:-7px;
@@ -872,116 +442,25 @@ left:50%;
 transform:translateX(-50%);
 border-width:0 7px 8px 7px;
 border-style:solid;
-border-color:transparent transparent white transparent;
+border-color:transparent transparent rgba(255,255,255,.95) transparent;
 }
 
-.formulario-soporte{
+.escena-espacio .formulario-soporte{
+position:relative;
+z-index:2;
 width:100%;
 max-width:250px;
 display:flex;
 flex-direction:column;
 gap:10px;
-opacity:0;
-transform:translateY(6px);
-transition:opacity .4s ease .35s, transform .4s ease .35s;
 }
 
-.escena-soporte.de-pie .formulario-soporte{
-opacity:1;
-transform:translateY(0);
-}
-
-.formulario-soporte textarea,
-.formulario-soporte input{
-border:none;
-border-radius:12px;
-padding:10px 12px;
-font-size:13px;
-outline:none;
-font-family:inherit;
-}
-
-.formulario-soporte textarea{
-resize:none;
-height:70px;
-}
-
-.formulario-soporte button{
-background:#f4c542;
-border:none;
-padding:10px;
-border-radius:12px;
-font-weight:bold;
-color:#1d3557;
-cursor:pointer;
-transition:.2s;
-}
-
-.formulario-soporte button:hover{
-transform:scale(1.02);
-}
-
-.confirmacion-soporte{
-display:none;
-color:#eaf6ec;
-background:rgba(99,182,123,.18);
-border:1px solid #63b67b;
-padding:10px;
-border-radius:12px;
-font-size:12px;
+footer{
+margin-top:25px;
 text-align:center;
-}
-
-/* ---- LA PUERTA (una sola, realista) ---- */
-.puerta{
-position:absolute;
-inset:0;
-transform-style:preserve-3d;
-transform-origin:left center;
-transition:transform .9s cubic-bezier(.6,-0.15,.28,1.15);
-z-index:9;
-background:linear-gradient(120deg,#9a6a37,#7a4b23 45%,#6b4220);
-box-shadow:inset 0 0 40px rgba(0,0,0,.4), 4px 0 10px rgba(0,0,0,.35);
-}
-
-.puerta::before{
-content:"";
-position:absolute;
-top:10%;
-left:12%;
-right:12%;
-height:36%;
-border:3px solid rgba(0,0,0,.25);
-border-radius:4px;
-box-shadow:inset 0 0 12px rgba(0,0,0,.3), 0 1px 0 rgba(255,255,255,.08);
-}
-
-.puerta::after{
-content:"";
-position:absolute;
-bottom:12%;
-left:12%;
-right:12%;
-height:38%;
-border:3px solid rgba(0,0,0,.25);
-border-radius:4px;
-box-shadow:inset 0 0 12px rgba(0,0,0,.3), 0 1px 0 rgba(255,255,255,.08);
-}
-
-.manija{
-position:absolute;
-top:50%;
-right:16px;
-width:12px;
-height:12px;
-background:radial-gradient(circle at 35% 35%,#ffe9a8,#c9a13e 70%,#8a6b1f);
-border-radius:50%;
-box-shadow:0 2px 4px rgba(0,0,0,.5);
-z-index:2;
-}
-
-.escena-soporte.abierta .puerta{
-transform:rotateY(-108deg);
+font-size:13px;
+letter-spacing:3px;
+color:#7f8c99;
 }
 
 footer{
@@ -993,29 +472,33 @@ color:#7f8c99;
 }
 
 /* =========================================================
-   ROBOT 3D FLOTANTE EN LA ESQUINA (mascota de soporte)
+   ROBOT 3D DENTRO DEL RECUADRO AZUL (mascota de soporte, arrastrable)
    ========================================================= */
 .robot-esquina{
 position:absolute;
-right:8px;
-top:8px;
-width:60px;
-height:92px;
+top:10px;
+right:14px;
+width:50px;
+height:78px;
 z-index:50;
-cursor:pointer;
+cursor:grab;
 pointer-events:auto;
-filter:drop-shadow(0 6px 10px rgba(0,0,0,.22));
-transition:transform .25s ease;
+touch-action:none;
+user-select:none;
+-webkit-user-select:none;
+filter:drop-shadow(0 6px 10px rgba(0,0,0,.3));
 }
 
-.robot-esquina:hover{
-transform:translateY(-4px) scale(1.05);
+.robot-esquina.arrastrando{
+cursor:grabbing;
+filter:drop-shadow(0 10px 16px rgba(0,0,0,.4));
 }
 
 .robot-esquina canvas{
 width:100%;
 height:100%;
 display:block;
+pointer-events:none;
 }
 
 .robot-esquina .etiqueta-esquina{
@@ -1023,11 +506,11 @@ position:absolute;
 top:-4px;
 left:50%;
 transform:translateX(-50%);
-background:#1d3557;
-color:#fff;
-font-size:10px;
+background:#f4c542;
+color:#1d3557;
+font-size:9px;
 font-weight:700;
-padding:3px 8px;
+padding:3px 7px;
 border-radius:10px;
 white-space:nowrap;
 opacity:0;
@@ -1050,7 +533,7 @@ h1{ font-size:22px; }
 .item span:first-child{ font-size:11px; }
 .item span:last-child{ font-size:12px; }
 .grid-metodos{ grid-template-columns:1fr; }
-.robot-esquina{ width:46px; height:72px; right:5px; top:5px; }
+.robot-esquina{ width:40px; height:62px; top:8px; right:10px; }
 }
 </style>
 </head>
@@ -1058,15 +541,17 @@ h1{ font-size:22px; }
 <body>
 <div class="container">
 
-<h1>PROYECTO HUGO</h1>
-
 <!-- ================= MENU PRINCIPAL ================= -->
 <section id="pantallaMenu" class="pantalla activa">
   <div class="telefono">
     <div class="notch"></div>
+    <!-- Robot 3D dentro del recuadro azul, arrastrable -->
+    <div class="robot-esquina" id="robotEsquina" title="Soporte Técnico">
+      <div class="etiqueta-esquina">¿Necesitas ayuda?</div>
+      <canvas id="cRobotEsquina"></canvas>
+    </div>
     <div class="pantalla-celular">
       <div class="hora-celular">•••</div>
-      <div class="marca-app">Proyecto Hugo</div>
       <div class="grid-menu">
         <button class="icono-app" onclick="mostrarPantalla('pantallaTransacciones')">
           <span class="emoji">💱</span>
@@ -1075,10 +560,6 @@ h1{ font-size:22px; }
         <button class="icono-app" onclick="mostrarPantalla('pantallaMetodos')">
           <span class="emoji">💳</span>
           <span class="nombre">Métodos</span>
-        </button>
-        <button class="icono-app soporte" onclick="abrirSoporte()">
-          <span class="emoji">🤖</span>
-          <span class="nombre">Soporte Técnico</span>
         </button>
       </div>
     </div>
@@ -1145,93 +626,24 @@ h1{ font-size:22px; }
     <div class="titulo-pantalla">Soporte Técnico</div>
   </div>
 
-  <div class="escena-soporte" id="escenaSoporte">
-    <div class="interior-puerta">
+  <div class="escena-espacio" id="escenaEspacio">
+    <div class="nebulosa n1"></div>
+    <div class="nebulosa n2"></div>
+    <div class="campo-estrellas" id="campoEstrellas"></div>
 
-      <!-- Oficina detrás de la puerta -->
-      <div class="oficina">
-        <div class="pared-ventana">
-          <div class="ventana">
-            <div class="cristal">
-              <div class="sol"></div>
-            </div>
-          </div>
-          <div class="rayos-luz"></div>
-          <div class="charco-luz"></div>
-        </div>
-
-        <div class="piso-oficina">
-          <div class="zona-escritorio">
-            <div class="sombra-robot"></div>
-            <div class="silla"></div>
-
-            <!-- Robot sentado programando -->
-            <div class="robot tecleando">
-              <div class="robot-antena"><div class="luz-antena"></div></div>
-              <div class="robot-cabeza">
-                <div class="robot-visor"><div class="ojo"></div><div class="ojo"></div></div>
-                <div class="brillo"></div>
-              </div>
-              <div class="robot-cuerpo">
-                <div class="panel-pecho"></div>
-                <div class="brillo"></div>
-              </div>
-              <div class="robot-brazo izq"></div>
-              <div class="robot-brazo der"></div>
-            </div>
-
-            <div class="compu">
-              <div class="monitor">
-                <div class="pantalla-pc">
-                  <div class="linea-codigo"></div>
-                  <div class="linea-codigo"></div>
-                  <div class="linea-codigo"></div>
-                  <div class="linea-codigo"></div>
-                  <div class="linea-codigo"></div>
-                </div>
-              </div>
-              <div class="pie-monitor"></div>
-              <div class="teclado"></div>
-            </div>
-            <div class="escritorio"></div>
-          </div>
-        </div>
-
-        <div class="zona-inferior">
-
-          <!-- Robot de pie saludando -->
-          <div class="robot saludando">
-            <div class="robot-antena"><div class="luz-antena"></div></div>
-            <div class="robot-cabeza">
-              <div class="robot-visor"><div class="ojo"></div><div class="ojo"></div></div>
-              <div class="brillo"></div>
-            </div>
-            <div class="robot-cuerpo">
-              <div class="panel-pecho"></div>
-              <div class="brillo"></div>
-            </div>
-            <div class="robot-brazo izq"></div>
-            <div class="robot-brazo der"></div>
-          </div>
-
-          <div class="globo">¡Hola! Soy el robot de soporte 🤖 Cuéntame tu duda y déjame tu correo.</div>
-          <form class="formulario-soporte" onsubmit="enviarSoporte(event)">
-            <textarea id="mensajeSoporte" placeholder="Escribe tu duda aquí..." required></textarea>
-            <input id="correoSoporte" type="email" placeholder="Tu correo electrónico" required>
-            <button type="submit">Enviar</button>
-            <div class="confirmacion-soporte" id="confirmacionSoporte">
-              ✅ ¡Gracias! Tu duda quedó registrada, te responderemos a tu correo pronto.
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <!-- Puerta (única, realista) -->
-      <div class="puerta">
-        <div class="manija"></div>
-      </div>
-
+    <div class="contenedor-robot-espacio">
+      <canvas id="cRobotEspacio"></canvas>
     </div>
+
+    <div class="globo-espacio">Escriba su mensaje y su correo 🤖</div>
+    <form class="formulario-soporte" onsubmit="enviarSoporte(event)">
+      <textarea id="mensajeSoporte" placeholder="Escribe tu duda aquí..." required></textarea>
+      <input id="correoSoporte" type="email" placeholder="Tu correo electrónico" required>
+      <button type="submit">Enviar</button>
+      <div class="confirmacion-soporte" id="confirmacionSoporte">
+        ✅ ¡Gracias! Tu duda quedó registrada, te responderemos a tu correo pronto.
+      </div>
+    </form>
   </div>
 </section>
 
@@ -1239,12 +651,6 @@ h1{ font-size:22px; }
 PROYECTO HUGO
 </footer>
 
-</div>
-
-<!-- ================= ROBOT 3D FLOTANTE (ESQUINA) ================= -->
-<div class="robot-esquina" id="robotEsquina" onclick="abrirSoporte()" title="Soporte Técnico">
-  <div class="etiqueta-esquina">¿Necesitas ayuda?</div>
-  <canvas id="cRobotEsquina"></canvas>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -1258,23 +664,10 @@ function mostrarPantalla(id){
 
 function abrirSoporte(){
   mostrarPantalla("pantallaSoporte");
-  const escena=document.getElementById("escenaSoporte");
-  escena.classList.remove("abierta","de-pie");
-
-  // 1) la puerta se abre y se revela la oficina (ventana, luz, escritorio, robot programando)
-  setTimeout(()=>{
-    escena.classList.add("abierta");
-  },150);
-
-  // 2) el robot nota tu presencia, se levanta del escritorio y te saluda
-  setTimeout(()=>{
-    escena.classList.add("de-pie");
-  },1500);
+  generarEstrellas();
 }
 
 function cerrarSoporte(){
-  const escena=document.getElementById("escenaSoporte");
-  escena.classList.remove("abierta","de-pie");
   document.getElementById("confirmacionSoporte").style.display="none";
   document.getElementById("mensajeSoporte").value="";
   document.getElementById("correoSoporte").value="";
@@ -1287,6 +680,25 @@ function enviarSoporte(e){
   // Para enviar el mensaje de verdad, conecta este formulario
   // a tu backend (por ejemplo otro Google Apps Script o un servicio de correo).
   document.getElementById("confirmacionSoporte").style.display="block";
+}
+
+/* ---------- CAMPO DE ESTRELLAS TITILANTES ---------- */
+let estrellasGeneradas=false;
+function generarEstrellas(){
+  if(estrellasGeneradas) return;
+  estrellasGeneradas=true;
+  const campo=document.getElementById("campoEstrellas");
+  const cantidad=70;
+  let html="";
+  for(let i=0;i<cantidad;i++){
+    const izq=Math.random()*100;
+    const arriba=Math.random()*100;
+    const tam=(Math.random()*2+1).toFixed(1);
+    const duracion=(Math.random()*2.5+1.5).toFixed(2);
+    const retraso=(Math.random()*3).toFixed(2);
+    html+=`<div class="estrella" style="left:${izq}%;top:${arriba}%;width:${tam}px;height:${tam}px;animation-duration:${duracion}s;animation-delay:${retraso}s;"></div>`;
+  }
+  campo.innerHTML=html;
 }
 
 async function cargar(){
@@ -1351,9 +763,9 @@ setInterval(cargar,5000);
    ROBOT 3D FLOTANTE CON PROPULSOR — versión reducida para
    vivir de forma permanente en la esquina de la pantalla
    ========================================================= */
-function buildFloatingRobotCorner(canvasId){
+function buildFloatingRobotCorner(canvasId,anchoCanvas,altoCanvas){
 
-  const w=60,h=92;
+  const w=anchoCanvas||50,h=altoCanvas||78;
   const scene=new THREE.Scene();
   const camera=new THREE.PerspectiveCamera(28,w/h,0.1,100);
   camera.position.set(0.4,-1.35,19.5);
@@ -1770,7 +1182,81 @@ function buildFloatingRobotCorner(canvasId){
   tick();
 }
 
-buildFloatingRobotCorner("cRobotEsquina");
+buildFloatingRobotCorner("cRobotEsquina",50,78);
+buildFloatingRobotCorner("cRobotEspacio",220,280);
+
+/* ---------- ARRASTRAR EL ROBOT CON EL MOUSE / DEDO ---------- */
+(function habilitarArrastreRobot(){
+  const robot=document.getElementById("robotEsquina");
+  const padre=robot.parentElement; // .telefono
+  let arrastrando=false;
+  let moved=false;
+  let startX=0,startY=0;
+  let startLeft=0,startTop=0;
+
+  function posicionInicialSiFalta(){
+    if(robot.style.left || robot.style.top) return;
+    const rRobot=robot.getBoundingClientRect();
+    const rPadre=padre.getBoundingClientRect();
+    robot.style.left=(rRobot.left-rPadre.left)+"px";
+    robot.style.top=(rRobot.top-rPadre.top)+"px";
+    robot.style.right="auto";
+  }
+
+  function onDown(clientX,clientY){
+    posicionInicialSiFalta();
+    arrastrando=true;
+    moved=false;
+    startX=clientX;
+    startY=clientY;
+    startLeft=parseFloat(robot.style.left)||0;
+    startTop=parseFloat(robot.style.top)||0;
+    robot.classList.add("arrastrando");
+  }
+
+  function onMove(clientX,clientY){
+    if(!arrastrando) return;
+    const dx=clientX-startX;
+    const dy=clientY-startY;
+    if(Math.abs(dx)>4||Math.abs(dy)>4) moved=true;
+
+    const rPadre=padre.getBoundingClientRect();
+    const maxLeft=rPadre.width-robot.offsetWidth;
+    const maxTop=rPadre.height-robot.offsetHeight;
+
+    let nuevoLeft=startLeft+dx;
+    let nuevoTop=startTop+dy;
+    nuevoLeft=Math.max(0,Math.min(maxLeft,nuevoLeft));
+    nuevoTop=Math.max(0,Math.min(maxTop,nuevoTop));
+
+    robot.style.left=nuevoLeft+"px";
+    robot.style.top=nuevoTop+"px";
+  }
+
+  function onUp(){
+    if(!arrastrando) return;
+    arrastrando=false;
+    robot.classList.remove("arrastrando");
+    if(!moved){
+      abrirSoporte();
+    }
+  }
+
+  robot.addEventListener("pointerdown",function(e){
+    robot.setPointerCapture(e.pointerId);
+    onDown(e.clientX,e.clientY);
+  });
+  robot.addEventListener("pointermove",function(e){
+    onMove(e.clientX,e.clientY);
+  });
+  robot.addEventListener("pointerup",function(e){
+    onUp();
+  });
+  robot.addEventListener("pointercancel",function(e){
+    arrastrando=false;
+    robot.classList.remove("arrastrando");
+  });
+})();
 </script>
 </body>
 </html>
