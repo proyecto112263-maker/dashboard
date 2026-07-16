@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Proyecto Hugo</title>
 
 <style>
-
 *{
 margin:0;
 padding:0;
@@ -17,496 +14,699 @@ font-family:Segoe UI,Arial,sans-serif;
 }
 
 body{
-
 background:#edf2f7;
-
 padding:15px;
-
 color:#243447;
-
+min-height:100vh;
 }
 
 .container{
-
 max-width:900px;
-
 margin:auto;
-
 }
 
 h1{
-
 text-align:center;
-
 margin-bottom:20px;
-
 font-size:30px;
-
 color:#1d3557;
-
 }
 
-.resumen{
-
+/* ---------- BARRA SUPERIOR TIPO CELULAR ---------- */
+.barra-superior{
 display:flex;
-
-gap:15px;
-
+align-items:center;
+gap:12px;
 margin-bottom:20px;
+}
 
+.btn-volver{
+background:white;
+border:none;
+border-radius:12px;
+width:40px;
+height:40px;
+font-size:18px;
+box-shadow:0 4px 10px rgba(0,0,0,.08);
+cursor:pointer;
+color:#1d3557;
+display:flex;
+align-items:center;
+justify-content:center;
+transition:.2s;
+}
+
+.btn-volver:hover{
+transform:translateX(-3px);
+}
+
+.titulo-pantalla{
+font-size:20px;
+font-weight:bold;
+color:#1d3557;
+}
+
+/* ---------- PANTALLAS ---------- */
+.pantalla{
+display:none;
+animation:fadeIn .35s ease;
+}
+
+.pantalla.activa{
+display:block;
+}
+
+@keyframes fadeIn{
+from{opacity:0; transform:translateY(8px);}
+to{opacity:1; transform:translateY(0);}
+}
+
+/* ---------- MENU PRINCIPAL (ESTILO CELULAR) ---------- */
+.telefono{
+max-width:340px;
+margin:20px auto;
+background:linear-gradient(180deg,#1d3557,#274472);
+border-radius:38px;
+padding:22px 18px 30px 18px;
+box-shadow:0 20px 40px rgba(0,0,0,.25);
+}
+
+.notch{
+width:90px;
+height:14px;
+background:#0e1c30;
+border-radius:10px;
+margin:0 auto 18px auto;
+}
+
+.pantalla-celular{
+background:#f4f7fb;
+border-radius:26px;
+padding:22px 16px;
+min-height:420px;
+}
+
+.hora-celular{
+text-align:center;
+color:#1d3557;
+font-size:14px;
+font-weight:600;
+letter-spacing:2px;
+margin-bottom:6px;
+opacity:.6;
+}
+
+.marca-app{
+text-align:center;
+font-size:22px;
+font-weight:bold;
+color:#1d3557;
+margin-bottom:26px;
+}
+
+.grid-menu{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:16px;
+}
+
+.icono-app{
+background:white;
+border-radius:20px;
+padding:18px 10px;
+text-align:center;
+box-shadow:0 6px 14px rgba(0,0,0,.08);
+cursor:pointer;
+border:none;
+transition:.2s;
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:8px;
+}
+
+.icono-app:hover{
+transform:translateY(-4px) scale(1.02);
+box-shadow:0 10px 20px rgba(0,0,0,.14);
+}
+
+.icono-app .emoji{
+font-size:34px;
+}
+
+.icono-app span.nombre{
+font-size:13px;
+font-weight:700;
+color:#243447;
+}
+
+.icono-app.soporte .emoji{
+animation:pulso 2.2s infinite;
+}
+
+@keyframes pulso{
+0%,100%{transform:scale(1);}
+50%{transform:scale(1.12);}
+}
+
+/* ---------- RESUMEN Y OPERACIONES (TRANSACCIONES) ---------- */
+.resumen{
+display:flex;
+gap:15px;
+margin-bottom:20px;
 flex-wrap:wrap;
-
 }
 
 .card{
-
 flex:1;
-
 background:white;
-
 padding:18px;
-
 border-radius:18px;
-
 box-shadow:0 5px 15px rgba(0,0,0,.08);
-
 text-align:center;
-
 }
 
 .card h2{
-
 font-size:14px;
-
 margin-bottom:8px;
-
 color:#7b8794;
-
 }
 
 .card p{
-
 font-size:30px;
-
 font-weight:bold;
-
 color:#1565c0;
-
 }
 
 #tabla{
-
 display:flex;
-
 flex-direction:column;
-
 gap:18px;
-
 }
 
 .operacion{
-
 border-radius:18px;
-
 padding:18px;
-
 box-shadow:0 6px 15px rgba(0,0,0,.08);
-
 transition:.25s;
-
 }
 
 .operacion:hover{
-
 transform:translateY(-2px);
-
 }
 
 .positivo{
-
 background:#eef8f1;
-
 border-left:8px solid #63b67b;
-
 }
 
 .negativo{
-
 background:#fdeeee;
-
 border-left:8px solid #d86c6c;
-
 }
 
 .fecha{
-
 font-size:15px;
-
 font-weight:bold;
-
 margin-bottom:18px;
-
 color:#2d4b6d;
-
 }
 
 .fila{
-
 display:grid;
-
 grid-template-columns:45% 55%;
-
 gap:15px;
-
 }
 
 .izquierda{
-
 display:flex;
-
 flex-direction:column;
-
 gap:18px;
-
 }
 
 .bloque{
-
 display:flex;
-
 flex-direction:column;
-
 }
 
 .titulo{
-
 font-size:11px;
-
 font-weight:bold;
-
 letter-spacing:1px;
-
 color:#7d8b99;
-
 margin-bottom:5px;
-
 text-transform:uppercase;
-
 }
 
 .valor{
-
 font-size:18px;
-
 font-weight:bold;
-
 color:#23364a;
-
 }
 
 .derecha{
-
 display:flex;
-
 flex-direction:column;
-
 gap:10px;
-
 justify-content:center;
-
 }
 
 .item{
-
 display:flex;
-
 justify-content:space-between;
-
 align-items:center;
-
 padding:7px 0;
-
 border-bottom:1px solid rgba(0,0,0,.05);
-
 }
 
 .item span:first-child{
-
 font-size:13px;
-
 color:#6f7c89;
-
 font-weight:600;
-
 }
 
 .item span:last-child{
-
 font-size:15px;
-
 font-weight:bold;
-
 color:#243447;
-
 }
 
 .gananciaPositiva{
-
 color:#239b56 !important;
-
 }
 
 .gananciaNegativa{
-
 color:#c0392b !important;
+}
 
+/* ---------- METODOS ---------- */
+.grid-metodos{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:16px;
+}
+
+.metodo-card{
+background:white;
+border-radius:18px;
+padding:20px;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+text-align:center;
+}
+
+.metodo-card .emoji{
+font-size:32px;
+margin-bottom:8px;
+}
+
+.metodo-card h3{
+font-size:15px;
+color:#1d3557;
+margin-bottom:4px;
+}
+
+.metodo-card p{
+font-size:12px;
+color:#7b8794;
+}
+
+.nota-metodos{
+margin-top:16px;
+font-size:12px;
+color:#7b8794;
+text-align:center;
+}
+
+/* ---------- SOPORTE TECNICO: PUERTA + ROBOT ---------- */
+.escena-soporte{
+position:relative;
+max-width:420px;
+margin:10px auto 0 auto;
+min-height:430px;
+background:linear-gradient(180deg,#0e1c30,#1d3557);
+border-radius:24px;
+overflow:hidden;
+box-shadow:0 15px 30px rgba(0,0,0,.25);
+}
+
+.cuarto{
+position:absolute;
+inset:0;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:flex-end;
+padding-bottom:26px;
+opacity:0;
+transition:opacity .5s ease .35s;
+}
+
+.escena-soporte.abierta .cuarto{
+opacity:1;
+}
+
+.robot{
+font-size:70px;
+animation:flotarRobot 3s ease-in-out infinite;
+}
+
+@keyframes flotarRobot{
+0%,100%{transform:translateY(0);}
+50%{transform:translateY(-8px);}
+}
+
+.globo{
+background:white;
+color:#1d3557;
+padding:10px 16px;
+border-radius:16px;
+font-size:13px;
+font-weight:600;
+max-width:260px;
+text-align:center;
+margin-bottom:10px;
+box-shadow:0 6px 14px rgba(0,0,0,.15);
+}
+
+.puerta-izq,.puerta-der{
+position:absolute;
+top:0;
+bottom:0;
+width:50%;
+background:linear-gradient(135deg,#8d5a2b,#6b4220);
+z-index:5;
+transition:transform .7s cubic-bezier(.6,-0.1,.3,1.3);
+box-shadow:inset 0 0 30px rgba(0,0,0,.35);
+}
+
+.puerta-izq{
+left:0;
+border-right:2px solid rgba(0,0,0,.25);
+transform-origin:left;
+}
+
+.puerta-der{
+right:0;
+border-left:2px solid rgba(0,0,0,.25);
+transform-origin:right;
+}
+
+.puerta-izq::after,.puerta-der::after{
+content:"";
+position:absolute;
+top:50%;
+width:10px;
+height:10px;
+background:#f4c542;
+border-radius:50%;
+box-shadow:0 0 6px rgba(0,0,0,.4);
+}
+
+.puerta-izq::after{ right:14px; }
+.puerta-der::after{ left:14px; }
+
+.escena-soporte.abierta .puerta-izq{
+transform:rotateY(78deg) translateX(-4px);
+}
+
+.escena-soporte.abierta .puerta-der{
+transform:rotateY(-78deg) translateX(4px);
+}
+
+.formulario-soporte{
+width:100%;
+padding:0 22px;
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.formulario-soporte textarea,
+.formulario-soporte input{
+border:none;
+border-radius:12px;
+padding:10px 12px;
+font-size:13px;
+outline:none;
+font-family:inherit;
+}
+
+.formulario-soporte textarea{
+resize:none;
+height:70px;
+}
+
+.formulario-soporte button{
+background:#f4c542;
+border:none;
+padding:10px;
+border-radius:12px;
+font-weight:bold;
+color:#1d3557;
+cursor:pointer;
+transition:.2s;
+}
+
+.formulario-soporte button:hover{
+transform:scale(1.02);
+}
+
+.confirmacion-soporte{
+display:none;
+color:#eaf6ec;
+background:rgba(99,182,123,.18);
+border:1px solid #63b67b;
+padding:10px;
+border-radius:12px;
+font-size:12px;
+text-align:center;
 }
 
 footer{
-
 margin-top:25px;
-
 text-align:center;
-
 font-size:13px;
-
 letter-spacing:3px;
-
 color:#7f8c99;
-
 }
 
 @media(max-width:700px){
-
-body{
-
-padding:8px;
-
+body{ padding:8px; }
+h1{ font-size:22px; }
+.card{ padding:12px; }
+.card p{ font-size:22px; }
+.fila{ grid-template-columns:1fr 1fr; gap:10px; }
+.valor{ font-size:15px; }
+.item span:first-child{ font-size:11px; }
+.item span:last-child{ font-size:12px; }
+.grid-metodos{ grid-template-columns:1fr; }
 }
-
-h1{
-
-font-size:22px;
-
-}
-
-.card{
-
-padding:12px;
-
-}
-
-.card p{
-
-font-size:22px;
-
-}
-
-.fila{
-
-grid-template-columns:1fr 1fr;
-
-gap:10px;
-
-}
-
-.valor{
-
-font-size:15px;
-
-}
-
-.item span:first-child{
-
-font-size:11px;
-
-}
-
-.item span:last-child{
-
-font-size:12px;
-
-}
-
-}
-
 </style>
-
 </head>
 
 <body>
-
 <div class="container">
 
-<h1>TRANSACCIONES</h1>
+<h1>PROYECTO HUGO</h1>
 
-<div class="resumen">
+<!-- ================= MENU PRINCIPAL ================= -->
+<section id="pantallaMenu" class="pantalla activa">
+  <div class="telefono">
+    <div class="notch"></div>
+    <div class="pantalla-celular">
+      <div class="hora-celular">•••</div>
+      <div class="marca-app">Proyecto Hugo</div>
+      <div class="grid-menu">
+        <button class="icono-app" onclick="mostrarPantalla('pantallaTransacciones')">
+          <span class="emoji">💱</span>
+          <span class="nombre">Transacciones</span>
+        </button>
+        <button class="icono-app" onclick="mostrarPantalla('pantallaMetodos')">
+          <span class="emoji">💳</span>
+          <span class="nombre">Métodos</span>
+        </button>
+        <button class="icono-app soporte" onclick="abrirSoporte()">
+          <span class="emoji">🤖</span>
+          <span class="nombre">Soporte Técnico</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
 
-<div class="card">
+<!-- ================= TRANSACCIONES ================= -->
+<section id="pantallaTransacciones" class="pantalla">
+  <div class="barra-superior">
+    <button class="btn-volver" onclick="mostrarPantalla('pantallaMenu')">←</button>
+    <div class="titulo-pantalla">Transacciones</div>
+  </div>
 
-<h2>CAPITAL INICIAL</h2>
+  <div class="resumen">
+    <div class="card">
+      <h2>CAPITAL INICIAL</h2>
+      <p id="capitalInicial">-</p>
+    </div>
+    <div class="card">
+      <h2>CAPITAL FINAL</h2>
+      <p id="capitalFinal">-</p>
+    </div>
+  </div>
 
-<p id="capitalInicial">-</p>
+  <div id="tabla"></div>
+</section>
 
-</div>
+<!-- ================= METODOS ================= -->
+<section id="pantallaMetodos" class="pantalla">
+  <div class="barra-superior">
+    <button class="btn-volver" onclick="mostrarPantalla('pantallaMenu')">←</button>
+    <div class="titulo-pantalla">Métodos</div>
+  </div>
 
-<div class="card">
+  <div class="grid-metodos">
+    <div class="metodo-card">
+      <div class="emoji">🏦</div>
+      <h3>Transferencia bancaria</h3>
+      <p>Depósito o transferencia a cuenta</p>
+    </div>
+    <div class="metodo-card">
+      <div class="emoji">💵</div>
+      <h3>Efectivo</h3>
+      <p>Entrega en persona</p>
+    </div>
+    <div class="metodo-card">
+      <div class="emoji">📱</div>
+      <h3>Billetera móvil</h3>
+      <p>QR / pago desde app</p>
+    </div>
+    <div class="metodo-card">
+      <div class="emoji">🌐</div>
+      <h3>Plataforma digital</h3>
+      <p>Pago en línea</p>
+    </div>
+  </div>
+  <p class="nota-metodos">Estos métodos son de ejemplo — reemplázalos por los que realmente uses.</p>
+</section>
 
-<h2>CAPITAL FINAL</h2>
+<!-- ================= SOPORTE TECNICO ================= -->
+<section id="pantallaSoporte" class="pantalla">
+  <div class="barra-superior">
+    <button class="btn-volver" onclick="cerrarSoporte()">←</button>
+    <div class="titulo-pantalla">Soporte Técnico</div>
+  </div>
 
-<p id="capitalFinal">-</p>
-
-</div>
-
-</div>
-
-<div id="tabla"></div>
+  <div class="escena-soporte" id="escenaSoporte">
+    <div class="puerta-izq"></div>
+    <div class="puerta-der"></div>
+    <div class="cuarto">
+      <div class="globo">¡Hola! Soy tu asistente. Escríbeme tu duda y tu correo, y te responderé.</div>
+      <div class="robot">🤖</div>
+      <form class="formulario-soporte" onsubmit="enviarSoporte(event)">
+        <textarea id="mensajeSoporte" placeholder="Escribe tu duda aquí..." required></textarea>
+        <input id="correoSoporte" type="email" placeholder="Tu correo electrónico" required>
+        <button type="submit">Enviar</button>
+        <div class="confirmacion-soporte" id="confirmacionSoporte">
+          ✅ ¡Gracias! Tu duda quedó registrada, te responderemos a tu correo pronto.
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
 
 <footer>
-
 PROYECTO HUGO
-
 </footer>
 
+</div>
+
 <script>
-  const URL="https://script.google.com/macros/s/AKfycbxcdEgTZeVoH5ESUIdFaTOfOVWuqXMSypVGZONOKG7kkOdpVz3z71cu1KtzrKyUa8PKTw/exec?api=1";
+const URL="https://script.google.com/macros/s/AKfycbxcdEgTZeVoH5ESUIdFaTOfOVWuqXMSypVGZONOKG7kkOdpVz3z71cu1KtzrKyUa8PKTw/exec?api=1";
 
-async function cargar(){
-
-const r=await fetch(URL);
-
-const datos=await r.json();
-
-document.getElementById("capitalInicial").innerText=datos[1][1];
-document.getElementById("capitalFinal").innerText=datos[2][1];
-
-let html="";
-
-for(let i=datos.length-1;i>=6;i--){
-
-let fecha=datos[i][0];
-let moneda=datos[i][1];
-let cantidad=datos[i][2];
-let compra=datos[i][3];
-let venta=datos[i][4];
-let spread=datos[i][5];
-let ganancia=datos[i][7];
-
-let numero=parseFloat(
-String(ganancia)
-.replace("%","")
-.replace(",",".")
-);
-
-let clase=numero>=0?"positivo":"negativo";
-let color=numero>=0?"gananciaPositiva":"gananciaNegativa";
-
-html+=`
-
-<div class="operacion ${clase}">
-
-<div class="fecha">
-
-📅 ${fecha}
-
-</div>
-
-<div class="fila">
-
-<div class="izquierda">
-
-<div class="bloque">
-
-<div class="titulo">
-
-MONEDA
-
-</div>
-
-<div class="valor">
-
-${moneda}
-
-</div>
-
-</div>
-
-<div class="bloque">
-
-<div class="titulo">
-
-CANTIDAD USADA
-
-</div>
-
-<div class="valor">
-
-${cantidad} USD
-
-</div>
-
-</div>
-
-</div>
-
-<div class="derecha">
-
-<div class="item">
-
-<span>Precio Compra</span>
-
-<span>${compra}</span>
-
-</div>
-
-<div class="item">
-
-<span>Precio Venta</span>
-
-<span>${venta}</span>
-
-</div>
-
-<div class="item">
-
-<span>Spread</span>
-
-<span>${spread}</span>
-
-</div>
-
-<div class="item">
-
-<span>Ganancia</span>
-
-<span class="${color}">
-
-${ganancia} USD
-
-</span>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-`;
-
+function mostrarPantalla(id){
+  document.querySelectorAll(".pantalla").forEach(p=>p.classList.remove("activa"));
+  document.getElementById(id).classList.add("activa");
 }
 
-document.getElementById("tabla").innerHTML=html;
+function abrirSoporte(){
+  mostrarPantalla("pantallaSoporte");
+  // pequeño respiro antes de que la puerta empiece a abrirse
+  setTimeout(()=>{
+    document.getElementById("escenaSoporte").classList.add("abierta");
+  },150);
+}
 
+function cerrarSoporte(){
+  document.getElementById("escenaSoporte").classList.remove("abierta");
+  document.getElementById("confirmacionSoporte").style.display="none";
+  document.getElementById("mensajeSoporte").value="";
+  document.getElementById("correoSoporte").value="";
+  mostrarPantalla("pantallaMenu");
+}
+
+function enviarSoporte(e){
+  e.preventDefault();
+  // Aquí solo se muestra la confirmación en pantalla.
+  // Para enviar el mensaje de verdad, conecta este formulario
+  // a tu backend (por ejemplo otro Google Apps Script o un servicio de correo).
+  document.getElementById("confirmacionSoporte").style.display="block";
+}
+
+async function cargar(){
+  const r=await fetch(URL);
+  const datos=await r.json();
+
+  document.getElementById("capitalInicial").innerText=datos[1][1];
+  document.getElementById("capitalFinal").innerText=datos[2][1];
+
+  let html="";
+
+  for(let i=datos.length-1;i>=6;i--){
+    let fecha=datos[i][0];
+    let moneda=datos[i][1];
+    let cantidad=datos[i][2];
+    let compra=datos[i][3];
+    let venta=datos[i][4];
+    let spread=datos[i][5];
+    let ganancia=datos[i][7];
+
+    let numero=parseFloat(
+      String(ganancia)
+      .replace("%","")
+      .replace(",",".")
+    );
+
+    let clase=numero>=0?"positivo":"negativo";
+    let color=numero>=0?"gananciaPositiva":"gananciaNegativa";
+
+    html+=`
+      <div class="operacion ${clase}">
+        <div class="fecha">📅 ${fecha}</div>
+        <div class="fila">
+          <div class="izquierda">
+            <div class="bloque">
+              <div class="titulo">MONEDA</div>
+              <div class="valor">${moneda}</div>
+            </div>
+            <div class="bloque">
+              <div class="titulo">CANTIDAD USADA</div>
+              <div class="valor">${cantidad} USD</div>
+            </div>
+          </div>
+          <div class="derecha">
+            <div class="item"><span>Precio Compra</span><span>${compra}</span></div>
+            <div class="item"><span>Precio Venta</span><span>${venta}</span></div>
+            <div class="item"><span>Spread</span><span>${spread}</span></div>
+            <div class="item"><span>Ganancia</span><span class="${color}">${ganancia} USD</span></div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  document.getElementById("tabla").innerHTML=html;
 }
 
 cargar();
-
 setInterval(cargar,5000);
-
 </script>
-
 </body>
-
 </html>
